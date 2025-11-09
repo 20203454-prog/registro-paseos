@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Paseos - Sistema Avanzado</title>
+    <style>
+        /* ESTILOS GENERALES */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 20px;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ENCABEZADO */
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* TARJETA PRINCIPAL */
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        /* NUEVA SECCIÓN DE REGISTROS GUARDADOS */
+        .records-section {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            margin-top: 30px;
+        }
+
+        .records-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .records-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .record-item {
+            background: #f8f9fa;
+            border: 1px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .record-item:hover {
+            border-color: #2575fc;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .record-date {
+            font-weight: bold;
+            color: #2575fc;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .record-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .record-detail {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #2575fc;
+        }
+
+        .record-detail strong {
+            color: #333;
+        }
+
+        .dogs-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .dog-tag {
+            background: #e3f2fd;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .btn-info {
+            background: #00cec9;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #00b5b0;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+
+        /* INFORMACIÓN GENERAL */
+        .general-info {
+            background: #f0f7ff;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 6px solid #2575fc;
+            margin-bottom: 30px;
+        }
+
+        .general-info h3 {
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        /* GRUPOS DE FORMULARIO */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: #2d3436;
+            font-size: 15px;
+        }
+
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.15);
+        }
+
+        /* TARJETAS DE PASEOS */
+        .walk-card {
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            background: #fff;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .walk-card:hover {
+            border-color: #2575fc;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .walk-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 18px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .walk-number {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2575fc;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* BOTONES */
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: #2575fc;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1a68e8;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(37, 117, 252, 0.3);
+        }
+
+        .btn-success {
+            background: #00cec9;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #00b5b0;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(0, 206, 201, 0.3);
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+            padding: 10px 18px;
+            font-size: 14px;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        /* CONTROLES */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 35px;
+            padding-top: 28px;
+            border-top: 2px solid #eee;
+        }
+
+        .counter {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 30px;
+            background: #f8f9fa;
+        }
+
+        .counter.warning {
+            color: #e74c3c;
+            background: #ffeaea;
+        }
+
+        .counter.success {
+            color: #00b894;
+            background: #e8faf8;
+        }
+
+        /* MENSAJES */
+        .message {
+            padding: 18px 24px;
+            border-radius: 10px;
+            margin: 18px 0;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 18px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .walk-header {
+                flex-direction: column;
+                gap: 18px;
+                align-items: flex-start;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .main-card, .records-section {
+                padding: 25px 20px;
+            }
+            
+            .records-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* ICONOS */
+        .icon {
+            font-size: 1.3em;
+        }
+
+        /* ESPECIAL: PERROS POR PASEO */
+        .dogs-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .dog-input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .dog-input-group input {
+            flex: 1;
+        }
+
+        .dog-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+
+        .dog-list {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ENCABEZADO PRINCIPAL -->
+        <div class="header">
+            <h1>🐕‍🦺 Sistema de Registro de Paseos</h1>
+            <p>Registro avanzado para paseadores - Entre 3 y 9 paseos por día - Hasta 8 perros por paseo</p>
+        </div>
+
+        <!-- TARJETA PRINCIPAL DEL FORMULARIO -->
+        <div class="main-card">
+            <!-- INFORMACIÓN GENERAL -->
+            <div class="general-info">
+                <h3>📋 Información General del Turno</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="fecha" class="required">Fecha principal:</label>
+                        <input type="date" id="fecha" name="fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Paseador principal:</label>
+                        <div id="paseador-principal" style="font-weight: bold; color: #2575fc; padding: 10px; background: #f0f7ff; border-radius: 8px;">
+                            Se asignará según el primer paseo
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTADOR DE PASEOS -->
+            <div class="counter" id="counter">
+                📊 Paseos registrados: <span id="walk-count">0</span>/9
+            </div>
+
+            <!-- MENSAJES DEL SISTEMA -->
+            <div id="message" class="message hidden"></div>
+
+            <!-- CONTENEDOR DE PASEOS -->
+            <div id="walks-container">
+                <!-- Los paseos se agregarán aquí automáticamente -->
+            </div>
+
+            <!-- BOTONES DE CONTROL -->
+            <div class="controls">
+                <button type="button" class="btn btn-primary" onclick="addWalk()">
+                    <span class="icon">+</span> Agregar Paseo
+                </button>
+                
+                <button type="button" class="btn btn-success" onclick="submitAllWalks()">
+                    <span class="icon">💾</span> Guardar Todos los Registros
+                </button>
+            </div>
+        </div>
+
+        <!-- NUEVA SECCIÓN: REGISTROS GUARDADOS -->
+        <div class="records-section">
+            <div class="records-header">
+                <h2>📋 Registros Guardados</h2>
+                <div>
+                    <button type="button" class="btn btn-info" onclick="loadSavedRecords()">
+                        🔄 Actualizar Lista
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="exportToJSON()">
+                        📤 Exportar a JSON
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="clearAllRecords()">
+                        🗑️ Limpiar Todo
+                    </button>
+                </div>
+            </div>
+
+            <div id="records-message" class="message hidden"></div>
+
+            <div id="records-list" class="records-list">
+                <!-- Los registros guardados aparecerán aquí -->
+            </div>
+
+            <div id="no-records" class="message info">
+                No hay registros guardados aún. Los registros aparecerán aquí después de guardarlos.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // VARIABLES GLOBALES
+        // =============================================
+        let walkCount = 0;
+        const MAX_WALKS = 9;
+        const MIN_WALKS = 3;
+        let walksData = [];
+        let paseadores = [
+            "Juan Pérez",
+            "María García", 
+            "Carlos López",
+            "Ana Rodríguez",
+            "David Martínez",
+            "Laura Fernández",
+            "Miguel Torres",
+            "Sofía Ramírez"
+        ];
+
+        // CLAVE PARA ALMACENAMIENTO LOCAL
+        const STORAGE_KEY = 'registros_paseos';
+
+        // =============================================
+        // FUNCIONES DE ALMACENAMIENTO LOCAL
+        // =============================================
+
+        // GUARDAR REGISTROS EN LOCALSTORAGE
+        function saveToLocalStorage() {
+            try {
+                // Obtener registros existentes
+                const existingRecords = getFromLocalStorage();
+                
+                // Crear nuevo registro
+                const newRecord = {
+                    id: Date.now(), // ID único basado en timestamp
+                    fecha: document.getElementById('fecha').value,
+                    paseador_principal: document.getElementById('paseador-principal').textContent,
+                    total_paseos: walkCount,
+                    paseos: walksData,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Agregar nuevo registro al inicio del array
+                existingRecords.unshift(newRecord);
+
+                // Guardar en localStorage
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(existingRecords));
+                
+                return true;
+            } catch (error) {
+                console.error('Error guardando en localStorage:', error);
+                return false;
+            }
+        }
+
+        // OBTENER REGISTROS DE LOCALSTORAGE
+        function getFromLocalStorage() {
+            try {
+                const records = localStorage.getItem(STORAGE_KEY);
+                return records ? JSON.parse(records) : [];
+            } catch (error) {
+                console.error('Error leyendo de localStorage:', error);
+                return [];
+            }
+        }
+
+        // CARGAR Y MOSTRAR REGISTROS GUARDADOS
+        function loadSavedRecords() {
+            const records = getFromLocalStorage();
+            const recordsList = document.getElementById('records-list');
+            const noRecords = document.getElementById('no-records');
+
+            if (records.length === 0) {
+                recordsList.innerHTML = '';
+                noRecords.classList.remove('hidden');
+                showRecordsMessage('No hay registros guardados.', 'info');
+                return;
+            }
+
+            noRecords.classList.add('hidden');
+            
+            let html = '';
+            records.forEach(record => {
+                html += `
+                    <div class="record-item">
+                        <div class="record-date">
+                            📅 ${new Date(record.timestamp).toLocaleDateString('es-ES', { 
+                                weekday: 'long', 
+                                year: 'numeric', 
+                                month: 'long', 
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}
+                        </div>
+                        <div class="record-details">
+                            <div class="record-detail">
+                                <strong>Paseador Principal:</strong><br>
+                                ${record.paseador_principal}
+                            </div>
+                            <div class="record-detail">
+                                <strong>Total de Paseos:</strong><br>
+                                ${record.total_paseos}
+                            </div>
+                            <div class="record-detail">
+                                <strong>Fecha:</strong><br>
+                                ${record.fecha}
+                            </div>
+                        </div>
+                        
+                        <div class="record-paseos">
+                            <strong>Detalles de Paseos:</strong>
+                            ${record.paseos.map((paseo, index) => `
+                                <div style="margin: 15px 0; padding: 15px; background: white; border-radius: 8px;">
+                                    <strong>Paseo ${parseInt(index) + 1}:</strong> 
+                                    ${paseo.paseador} - ${paseo.inicio} a ${paseo.fin}
+                                    <br>
+                                    <strong>Perros (${paseo.num_perros}):</strong>
+                                    <div class="dogs-list">
+                                        ${paseo.perros.map(perro => `
+                                            <span class="dog-tag">${perro}</span>
+                                        `).join('')}
+                                    </div>
+                                    ${paseo.notas ? `<br><strong>Notas:</strong> ${paseo.notas}` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <button type="button" class="btn btn-danger btn-small" onclick="deleteRecord(${record.id})">
+                            🗑️ Eliminar este registro
+                        </button>
+                    </div>
+                `;
+            });
+
+            recordsList.innerHTML = html;
+            showRecordsMessage(`Se cargaron ${records.length} registros guardados.`, 'success');
+        }
+
+        // ELIMINAR UN REGISTRO ESPECÍFICO
+        function deleteRecord(recordId) {
+            if (confirm('¿Estás seguro de que quieres eliminar este registro?')) {
+                const records = getFromLocalStorage();
+                const filteredRecords = records.filter(record => record.id !== recordId);
+                
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredRecords));
+                loadSavedRecords();
+                showRecordsMessage('Registro eliminado correctamente.', 'success');
+            }
+        }
+
+        // EXPORTAR A ARCHIVO JSON
+        function exportToJSON() {
+            const records = getFromLocalStorage();
+            if (records.length === 0) {
+                showRecordsMessage('No hay registros para exportar.', 'error');
+                return;
+            }
+
+            const dataStr = JSON.stringify(records, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `paseos_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            showRecordsMessage('Datos exportados correctamente a JSON.', 'success');
+        }
+
+        // LIMPIAR TODOS LOS REGISTROS
+        function clearAllRecords() {
+            if (confirm('¿Estás seguro de que quieres eliminar TODOS los registros? Esta acción no se puede deshacer.')) {
+                localStorage.removeItem(STORAGE_KEY);
+                loadSavedRecords();
+                showRecordsMessage('Todos los registros han sido eliminados.', 'info');
+            }
+        }
+
+        // MOSTRAR MENSAJES EN LA SECCIÓN DE REGISTROS
+        function showRecordsMessage(text, type) {
+            const messageElement = document.getElementById('records-message');
+            messageElement.textContent = text;
+            messageElement.className = `message ${type}`;
+            messageElement.classList.remove('hidden');
+            
+            setTimeout(() => {
+                messageElement.classList.add('hidden');
+            }, 5000);
+        }
+
+        // =============================================
+        // FUNCIONES DEL FORMULARIO
+        // =============================================
+
+        function addWalk() {
+            if (walkCount >= MAX_WALKS) {
+                showMessage('❌ Máximo 9 paseos permitidos por día', 'error');
+                return;
+            }
+
+            walkCount++;
+            updateCounter();
+
+            const walkHTML = `
+                <div class="walk-card" id="walk-${walkCount}" data-walk-id="${walkCount}">
+                    <div class="walk-header">
+                        <div class="walk-number">
+                            <span class="icon">🐕‍🦺</span> Paseo #${walkCount}
+                        </div>
+                        <div class="walk-actions">
+                            <button type="button" class="btn btn-danger" onclick="removeWalk(${walkCount})">
+                                <span class="icon">🗑️</span> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="paseador-${walkCount}" class="required">Paseador:</label>
+                            <select id="paseador-${walkCount}" name="paseador[]" required onchange="updateMainWalker()">
+                                <option value="">Seleccionar paseador...</option>
+                                ${paseadores.map(paseador => `<option value="${paseador}">${paseador}</option>`).join('')}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fecha-${walkCount}" class="required">Fecha del paseo:</label>
+                            <input type="date" id="fecha-${walkCount}" name="fecha_paseo[]" required>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="inicio-${walkCount}" class="required">Hora de inicio:</label>
+                            <input type="time" id="inicio-${walkCount}" name="inicio[]" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fin-${walkCount}" class="required">Hora de finalización:</label>
+                            <input type="time" id="fin-${walkCount}" name="fin[]" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-perros-${walkCount}" class="required">Número de perros (1-8):</label>
+                        <select id="num-perros-${walkCount}" name="num_perros[]" required onchange="toggleDogInputs(${walkCount})">
+                            <option value="">Selecciona cantidad...</option>
+                            ${Array.from({length: 8}, (_, i) => `<option value="${i+1}">${i+1} perro(s)</option>`).join('')}
+                        </select>
+                        
+                        <div id="dogs-container-${walkCount}" class="dogs-container hidden">
+                            <label>Nombres de los perros:</label>
+                            <div id="dog-inputs-${walkCount}">
+                                <!-- Los inputs para nombres de perros se agregarán aquí -->
+                            </div>
+                            <div id="dog-list-${walkCount}" class="dog-list">
+                                <!-- Los nombres ingresados se mostrarán aquí -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notas-${walkCount}">Notas adicionales del paseo:</label>
+                        <textarea id="notas-${walkCount}" name="notas[]" rows="3" 
+                                  placeholder="Comportamiento de los perros, incidentes, observaciones importantes..."></textarea>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('walks-container').insertAdjacentHTML('beforeend', walkHTML);
+            setDefaultValues(walkCount);
+            showMessage(`✅ Paseo #${walkCount} agregado correctamente`, 'success');
+        }
+
+        function setDefaultValues(walkId) {
+            if (walkId === 1) {
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('fecha').value = today;
+                document.getElementById(`fecha-${walkId}`).value = today;
+            } else {
+                const fechaPrincipal = document.getElementById('fecha').value;
+                if (fechaPrincipal) {
+                    document.getElementById(`fecha-${walkId}`).value = fechaPrincipal;
+                }
+            }
+            
+            const now = new Date();
+            const timeString = now.toTimeString().slice(0,5);
+            document.getElementById(`inicio-${walkId}`).value = timeString;
+            
+            const endTime = new Date(now.getTime() + 30 * 60000);
+            const endTimeString = endTime.toTimeString().slice(0,5);
+            document.getElementById(`fin-${walkId}`).value = endTimeString;
+        }
+
+        function toggleDogInputs(walkId) {
+            const numPerros = document.getElementById(`num-perros-${walkId}`).value;
+            const container = document.getElementById(`dogs-container-${walkId}`);
+            const inputsContainer = document.getElementById(`dog-inputs-${walkId}`);
+            const listContainer = document.getElementById(`dog-list-${walkId}`);
+            
+            if (numPerros && numPerros > 0) {
+                container.classList.remove('hidden');
+                inputsContainer.innerHTML = '';
+                
+                for (let i = 1; i <= numPerros; i++) {
+                    const inputHTML = `
+                        <div class="dog-input-group">
+                            <label for="dog-${walkId}-${i}">Perro ${i}:</label>
+                            <input type="text" id="dog-${walkId}-${i}" 
+                                   placeholder="Nombre del perro ${i}" 
+                                   onchange="updateDogList(${walkId})">
+                        </div>
+                    `;
+                    inputsContainer.innerHTML += inputHTML;
+                }
+                
+                inputsContainer.innerHTML += `
+                    <div class="dog-actions">
+                        <button type="button" class="btn btn-primary btn-small" onclick="addExtraDog(${walkId})">
+                            + Añadir otro perro
+                        </button>
+                    </div>
+                `;
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        function addExtraDog(walkId) {
+            const inputsContainer = document.getElementById(`dog-inputs-${walkId}`);
+            const currentInputs = inputsContainer.querySelectorAll('.dog-input-group').length;
+            
+            if (currentInputs >= 8) {
+                showMessage('❌ Máximo 8 perros por paseo', 'error');
+                return;
+            }
+            
+            const newInputHTML = `
+                <div class="dog-input-group">
+                    <label for="dog-${walkId}-${currentInputs + 1}">Perro ${currentInputs + 1}:</label>
+                    <input type="text" id="dog-${walkId}-${currentInputs + 1}" 
+                           placeholder="Nombre del perro ${currentInputs + 1}" 
+                           onchange="updateDogList(${walkId})">
+                </div>
+            `;
+            
+            const actionsDiv = inputsContainer.querySelector('.dog-actions');
+            inputsContainer.insertBefore(createElementFromHTML(newInputHTML), actionsDiv);
+            document.getElementById(`num-perros-${walkId}`).value = currentInputs + 1;
+        }
+
+        function updateDogList(walkId) {
+            const listContainer = document.getElementById(`dog-list-${walkId}`);
+            const inputs = document.querySelectorAll(`#dog-inputs-${walkId} input[type="text"]`);
+            
+            listContainer.innerHTML = '<strong>Perros en este paseo:</strong><br>';
+            
+            inputs.forEach((input, index) => {
+                if (input.value.trim() !== '') {
+                    const dogName = input.value.trim();
+                    listContainer.innerHTML += `
+                        <span class="dog-tag">
+                            ${dogName}
+                            <span class="remove-dog" onclick="removeDog(${walkId}, ${index + 1})">×</span>
+                        </span>
+                    `;
+                }
+            });
+        }
+
+        function removeDog(walkId, dogIndex) {
+            const input = document.getElementById(`dog-${walkId}-${dogIndex}`);
+            if (input) {
+                input.value = '';
+                updateDogList(walkId);
+            }
+        }
+
+        function removeWalk(walkId) {
+            const walkElement = document.getElementById(`walk-${walkId}`);
+            if (walkElement) {
+                walkElement.remove();
+                walkCount--;
+                updateCounter();
+                renumberWalks();
+                updateMainWalker();
+                showMessage('🗑️ Paseo eliminado', 'info');
+            }
+        }
+
+        function renumberWalks() {
+            const walkCards = document.querySelectorAll('.walk-card');
+            walkCards.forEach((card, index) => {
+                const newNumber = index + 1;
+                card.id = `walk-${newNumber}`;
+                card.setAttribute('data-walk-id', newNumber);
+                
+                const walkNumberElement = card.querySelector('.walk-number');
+                walkNumberElement.innerHTML = `<span class="icon">🐕‍🦺</span> Paseo #${newNumber}`;
+                
+                const deleteBtn = card.querySelector('.btn-danger');
+                deleteBtn.setAttribute('onclick', `removeWalk(${newNumber})`);
+            });
+        }
+
+        function updateMainWalker() {
+            const firstWalkerSelect = document.querySelector('select[name="paseador[]"]');
+            if (firstWalkerSelect && firstWalkerSelect.value) {
+                document.getElementById('paseador-principal').textContent = firstWalkerSelect.value;
+            }
+        }
+
+        function updateCounter() {
+            const counterElement = document.getElementById('walk-count');
+            const counterContainer = document.getElementById('counter');
+            
+            counterElement.textContent = walkCount;
+            
+            counterContainer.className = 'counter';
+            if (walkCount < MIN_WALKS) {
+                counterContainer.classList.add('warning');
+            } else if (walkCount >= MIN_WALKS) {
+                counterContainer.classList.add('success');
+            }
+        }
+
+        function showMessage(text, type) {
+            const messageElement = document.getElementById('message');
+            messageElement.textContent = text;
+            messageElement.className = `message ${type}`;
+            messageElement.classList.remove('hidden');
+            
+            setTimeout(() => {
+                messageElement.classList.add('hidden');
+            }, 5000);
+        }
+
+        // =============================================
+        // FUNCIÓN PRINCIPAL MODIFICADA: AHORA GUARDA EN LOCALSTORAGE
+        // =============================================
+        function submitAllWalks() {
+            if (walkCount < MIN_WALKS) {
+                showMessage(`❌ Mínimo ${MIN_WALKS} paseos requeridos. Actualmente tienes ${walkCount}.`, 'error');
+                return;
+            }
+
+            let allValid = true;
+            const walkCards = document.querySelectorAll('.walk-card');
+            
+            walkCards.forEach((card) => {
+                const requiredFields = card.querySelectorAll('[required]');
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.style.borderColor = '#e74c3c';
+                        allValid = false;
+                    } else {
+                        field.style.borderColor = '#ddd';
+                    }
+                });
+                
+                const walkId = card.getAttribute('data-walk-id');
+                const numPerros = document.getElementById(`num-perros-${walkId}`).value;
+                if (numPerros && numPerros > 0) {
+                    const dogInputs = card.querySelectorAll('input[type="text"][id^="dog-"]');
+                    let dogsNamed = true;
+                    dogInputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            input.style.borderColor = '#e74c3c';
+                            dogsNamed = false;
+                            allValid = false;
+                        } else {
+                            input.style.borderColor = '#ddd';
+                        }
+                    });
+                    
+                    if (!dogsNamed) {
+                        showMessage('⚠️ Por favor, ingresa los nombres de todos los perros', 'error');
+                    }
+                }
+            });
+
+            if (!allValid) {
+                showMessage('⚠️ Por favor, completa todos los campos requeridos', 'error');
+                return;
+            }
+
+            collectWalkData();
+            
+            // GUARDAR EN ALMACENAMIENTO LOCAL
+            if (saveToLocalStorage()) {
+                showMessage(`🎉 ¡Excelente! ${walkCount} paseos guardados permanentemente.`, 'success');
+                
+                // Actualizar la lista de registros
+                setTimeout(() => {
+                    loadSavedRecords();
+                }, 1000);
+            } else {
+                showMessage('❌ Error al guardar los datos.', 'error');
+            }
+            
+            console.log('Datos guardados:', walksData);
+        }
+
+        function collectWalkData() {
+            walksData = [];
+            const walkCards = document.querySelectorAll('.walk-card');
+            
+            walkCards.forEach((card) => {
+                const walkId = card.getAttribute('data-walk-id');
+                
+                const dogNames = [];
+                const dogInputs = document.querySelectorAll(`#dog-inputs-${walkId} input[type="text"]`);
+                dogInputs.forEach(input => {
+                    if (input.value.trim() !== '') {
+                        dogNames.push(input.value.trim());
+                    }
+                });
+                
+                const walkData = {
+                    id: walkId,
+                    paseador: document.getElementById(`paseador-${walkId}`).value,
+                    fecha: document.getElementById(`fecha-${walkId}`).value,
+                    inicio: document.getElementById(`inicio-${walkId}`).value,
+                    fin: document.getElementById(`fin-${walkId}`).value,
+                    num_perros: document.getElementById(`num-perros-${walkId}`).value,
+                    perros: dogNames,
+                    notas: document.getElementById(`notas-${walkId}`).value,
+                    timestamp: new Date().toISOString()
+                };
+                walksData.push(walkData);
+            });
+        }
+
+        function createElementFromHTML(htmlString) {
+            const div = document.createElement('div');
+            div.innerHTML = htmlString.trim();
+            return div.firstChild;
+        }
+
+        // =============================================
+        // INICIALIZACIÓN MEJORADA
+        // =============================================
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').value = today;
+            
+            for (let i = 0; i < MIN_WALKS; i++) {
+                addWalk();
+            }
+            
+            // Cargar registros existentes al iniciar
+            loadSavedRecords();
+            
+            showMessage(`✅ Sistema listo. Se han creado ${MIN_WALKS} paseos iniciales.`, 'success');
+        };
+    </script>
+</body>
+</html>
